@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-from datetime import datetime, timedelta
+from datetime import datetime
 import csv
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -60,11 +60,11 @@ try:
             try:
                 row = csvReader.__next__()
                 if employee != row[1]:
-                    body += name + ': ' + str(timedelta(seconds=secondsWorked)) + '\n'
+                    body += name + ': ' + str(round(secondsWorked/3600, 2)) + 'hours \n'
                     employee = row[1]
                     secondsWorked = 0
             except:
-                body += name + ': ' + str(timedelta(seconds=secondsWorked)) + '\n'
+                body += name + ': ' + str(round(secondsWorked/3600, 2)) + 'hours \n'
                 break
 
         # Constructing email
