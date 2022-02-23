@@ -7,9 +7,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 # Enter your sending & receiving emails here
+# Sender must be gmail address
 sender = 'examplesender@gmail.com'
 password = 'YOUR_PASSWORD'
-receiver = ['examplerecipient@gmail.com', 'otherexamplerecipient@gmail.com']
+recipients = ['examplerecipient1@gmail.com', 'examplerecipient2@gmail.com']
 admin = 'exampleadmin@gmail.com'
 
 # Timestamp format from SQL export
@@ -19,12 +20,31 @@ now = datetime.now()
 # Name and path of .csv from SQL export
 fileName = '/var/tmp/timestamps_' + now.strftime('%Y_%m_%d') + '.csv'
 
-# Subject and body of email message
+# Subject, body, server of email message
 subject = 'Hours: ' + now.strftime('%B %-d, %Y')
 body = 'Here are the hours worked from the pay period ending ' + now.strftime('%B %-d, %Y') + ': \n'
 
+# Send email
+def send_email(receiver, emailSubject, emailBody, exceptMessage):
+    # Constructing email
+    emailMessage = MIMEMultipart()
+    emailMessage['From'] = sender
+    emailMessage['To'] = receiver
+    emailMessage['Subject'] = emailSubject
+    emailMessage.attach(MIMEText(emailBody, 'plain'))
+    composedEmail = emailMessage.as_string()
+
+    # Connecting to SMTP and sending email
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(sender, password)
+        server.sendmail(sender, receiver, composedEmail)
+        server.close()
+    except:
+        print(exceptMessage)
+
 try:
-    # Main loop: summing hours for each employee and appending email body
+    # Main loop: summing hours for each employee and appending email
     with open(fileName) as csvFile:
         csvReader = csv.reader(csvFile, quoting=csv.QUOTE_ALL, delimiter=',')
         secondsWorked = 0
@@ -37,24 +57,13 @@ try:
             row = csvReader.__next__()
             timeStampEnd = datetime.strptime(row[2], formatDate)
 
-            # Alert someone if unexpected timestamp difference
-            if (((timeStampEnd - timeStampBegin).total_seconds()) - 1800) > 45000:
+            # Alert if unexpected timestamp difference
+            if (((timeStampEnd - timeStampBegin).total_seconds()) - 1800) > 43200 or (((timeStampEnd - timeStampBegin).total_seconds()) - 1800) < 0:
                 subject = 'Error Summing Hours'
-                body = 'Excessive timestamp difference'
-                message = MIMEMultipart()
-                message['From'] = sender
-                message['To'] = ', '.join(admin)
-                message['Subject'] = subject
-                message.attach(MIMEText(body, 'plain'))
-                bodyText = message.as_string()
+                body = 'Excessive timestamp difference at: ' + name + ' ' + str(timeStampBegin)
 
-                try:
-                    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-                    server.login(sender, password)
-                    server.sendmail(sender, admin, bodyText)
-                    server.close()
-                except:
-                    print('alert email failed')
+                send_email(admin, subject, body, 'alert email failed')
+                quit()
 
             secondsWorked += (((timeStampEnd - timeStampBegin).total_seconds()) - 1800)
             try:
@@ -67,22 +76,7 @@ try:
                 body += name + ': ' + str(round(secondsWorked/3600, 2)) + 'hours \n'
                 break
 
-        # Constructing email
-        message = MIMEMultipart()
-        message['From'] = sender
-        message['To'] = ', '.join(receiver)
-        message['Subject'] = subject
-        message.attach(MIMEText(body, 'plain'))
-        bodyText = message.as_string()
-
-        # Connecting to SMTP and sending email
-        try:
-            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-            server.login(sender, password)
-            server.sendmail(sender, receiver, bodyText)
-            server.close()
-        except:
-            print('email failed')
+        send_email(recipients, subject, body, 'hours email failed')
 
 except:
-    print('no file to parse')
+    print('gremlin')
