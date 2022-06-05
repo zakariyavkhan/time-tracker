@@ -6,7 +6,7 @@ import RPi.GPIO as GPIO
 from mfrc522 import SimpleMFRC522
 import mysql.connector
 
-# Configure raspberrypi GPIO outputs for LEDs
+# configure raspberrypi GPIO outputs for LEDs
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 green = 16
@@ -14,38 +14,31 @@ red = 18
 GPIO.setup(green, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(red, GPIO.OUT, initial=GPIO.LOW)
 
+# init RFID reader
 reader = SimpleMFRC522()
 
-# Configure database init details, SQL queries
+# configure database init details, SQL queries
 dbHost = 'localhost'
 dbName = 'YOUR_DB_NAME'
 dbUser = 'YOUR_DB_USER'
 dbPassword = 'YOUR_DB_USER_PASSWORD'
-
-# config = {
-#  'user': 'YOUR_DB_USER',
-#  'password': 'YOUR_DB_USER_PASSWORD',
-#  'host': 'localhost',
-#  'database': 'YOUR_DB_NAME'
-# }
 
 idSearch = 'SELECT id, name FROM users WHERE rfid_uid ='
 attendanceInsert = 'INSERT INTO attendance (user_id, name) VALUES (%s, %s)'
 connection = None
 
 
-# Initializes database
+# initialize database
 def init_db():
     return mysql.connector.connect(
         host=dbHost,
         user=dbUser,
         passwd=dbPassword,
         database=dbName
-        # **config
     )
 
 
-# Reactivates connection if necessary and returns cursor on database
+# refreshes and returns cursor on database
 def get_cursor():
     global connection
     try:
@@ -55,7 +48,7 @@ def get_cursor():
     return connection.cursor()
 
 
-# Flashes LED
+# flashes LED
 def flash(color):
     GPIO.output(color, GPIO.HIGH)
     sleep(2)
@@ -66,7 +59,7 @@ def flash(color):
 connection = init_db()
 cursor = get_cursor()
 
-# Main loop: Records UID and timestamp to database when RFID card is scanned
+# logs UID and timestamp when card scanned
 while True:
     current_user_id, discard = reader.read()
     cursor = get_cursor()
