@@ -57,8 +57,11 @@ try:
 
                 send_email(errorEmail, emailSubject, emailBody, 'alert email failed')
                 quit()
+            elif (timeStampEnd - timeStampBegin).total_seconds() < 18000:
+                timeElapsed += (timeStampEnd - timeStampBegin).total_seconds()
+            else:
+                timeElapsed += (((timeStampEnd - timeStampBegin).total_seconds()) - 1800)
 
-            timeElapsed += (((timeStampEnd - timeStampBegin).total_seconds()) - 1800)
             try:
                 row = csvReader.__next__()
                 if userID != row[1]:
