@@ -1,6 +1,4 @@
-<img src="https://i.imgur.com/SkXi0fD.png?1" width="300">
-
-![main]("https://i.imgur.com/SkXi0fD.png?1")
+<img src="https://i.imgur.com/SkXi0fD.png?1" width="750">
 
 # Overview
 
