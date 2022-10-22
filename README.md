@@ -3,12 +3,10 @@
 
 # Overview
 
-A simple, automated punch clock to track employee hours. Uses bash and python scripts, MySQL database, and an Apache/NGINX web server for database management. Based on RPi and RC522 RFID module.
+A simple, automated punch clock to track employee hours. Uses Python script running under systemd, cron for job automation, MySQL (MariaDB) database, and an NGINX web server for database management (PHPMyAdmin). Based on RPi and RC522 RFID module.
 
 # TODO
-build/install instructions
-config
-add crontab config
-add MySQL init file/schema
-phpMyAdmin + NGINX config
 
+- build/install instructions
+- parametric config
+- phpMyAdmin + NGINX
