@@ -1,4 +1,4 @@
-![main](https://imgur.com/a/i1uHAcF)
+<img src="https://imgur.com/a/i1uHAcF" width="300">
 
 
 # Overview
