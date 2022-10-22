@@ -12,5 +12,3 @@ add crontab config
 add MySQL init file/schema
 phpMyAdmin + NGINX config
 
-
-<img src="https://i.imgur.com/SkXi0fD.png?1" width="750">
