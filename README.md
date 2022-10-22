@@ -1,5 +1,5 @@
 <img src="https://i.imgur.com/SkXi0fD.png?1" width="750">
-
+![pic](https://i.imgur.com/SkXi0fD.png)
 # Overview
 
 A simple, automated punch clock to track employee hours. Uses bash and python scripts, MySQL database, and an Apache/NGINX web server for database management. Based on RPi and RC522 RFID module.
