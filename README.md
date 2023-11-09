@@ -7,6 +7,5 @@ A simple, automated punch clock to track employee hours. Uses Python script runn
 
 # TODO
 
-- build/install instructions
-- parametric config
-- phpMyAdmin + NGINX
+- write setup.txt into a proper setup guide
+- deploy the program onto RaspberryPi with Ansible

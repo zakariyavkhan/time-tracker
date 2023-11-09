@@ -1,0 +1,52 @@
+database:
+mysql_secure_installation
+mysql -u root -p
+CREATE USER 'admin'@'%' IDENTIFIED BY 'password';
+GRANT ALL ON time_tracker.* TO 'admin'@'%' IDENTIFIED BY 'password';
+
+-- time_tracker.users definition
+
+CREATE TABLE `users` (
+  `UID` varchar(16) NOT NULL,
+  `name` varchar(16) NOT NULL,
+  PRIMARY KEY (`UID`),
+  UNIQUE KEY `UID` (`UID`),
+  UNIQUE KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- time_tracker.timestamps definition
+
+CREATE TABLE `timestamps` (
+  `time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `UID` varchar(16) NOT NULL,
+  PRIMARY KEY (`time`),
+  KEY `UID` (`UID`),
+  CONSTRAINT `timestamps_ibfk_1` FOREIGN KEY (`UID`) REFERENCES `users` (`UID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+enable spi -> raspi-config
+set the time on the raspi: timedatectl America/Vancouver
+
+sudo apt update
+sudo apt install python3-venv python3-pip libmariadb-dev mariadb-server==10.5
+python3 -m pip install --upgrade pip setuptools wheel 
+python3 -m pip install [requirements.txt]
+
+crontab -e
+0 18 * * FRI /usr/bin/python3 /home/pi/checkout/hours_report.py
+
+/lib/systemd/system/rfid_logger.service
+systemctl enable rfid_logger.service
+systemctl daemon-reload
+
+dbeaver 23.2.1
+Couple things that helped to connect:
+    - netstat grep 3306 to check if its listening
+    also change 127.0.0.1 to 0.0.0.0 in the mariadb config file
+    set bind-address to ip address of rpi
+    flush privileges
+
+configure all parameters for the python program with a local .env !
+create a data directory to store the json exports
+make sure the hours script is executable
+create the log file ( it needs 1 entry to begin with: see python main method )

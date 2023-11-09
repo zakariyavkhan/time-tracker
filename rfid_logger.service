@@ -1,0 +1,15 @@
+[Unit]
+Description=RFID Logger
+After=multi-user.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/checkout/
+ExecStart=/home/pi/checkout/rfid_logger.py
+Environment="PYTHONPATH=$PYTHONPATH:/home/pi/.local/lib/python3.9/site-packages"
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

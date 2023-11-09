@@ -1,0 +1,6 @@
+out.log
+data/
+*.csv
+ts_hours.py
+test/
+.env
