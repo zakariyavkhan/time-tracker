@@ -3,7 +3,7 @@
 
 # Overview
 
-A simple, automated punch clock to track employee hours. Uses Python script running under systemd, cron for job automation, MySQL (MariaDB) database. Based on RPi and RC522 RFID module.
+An automated punch clock to track employee hours. Uses Python script running under systemd, cron for job automation, MySQL (MariaDB) database. Based on RPi and RC522 RFID module.
 
 # TODO
 
